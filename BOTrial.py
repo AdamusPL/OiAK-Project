@@ -84,9 +84,9 @@ S1=sum(A,B,carry)
 carry=0
 S2=sum(S1,K,carry)
 
-if carry=0:
-
-else:
+# if carry=0:
+#
+# else:
 
 
 print("The list from number is " + str(S1))
