@@ -1,11 +1,13 @@
 def checkAB(X):
     good = True  # when MSB equals 0, we accept everything
 
-    if X[n - 1] == 1:  # when MSB equals 1, check if other bits equals 0
-        for x in X:
-            if x != 0:
-                good = False
-                break
+    for i in range (n-1,-1,-1):
+        if X[i] == 1:
+            if i==0:
+                good=False
+            continue
+        else:
+            break
 
     return good
 
@@ -88,9 +90,10 @@ S2=sum(S1,K,carry)
 #
 # else:
 
-
-print("The list from number is " + str(S1))
-print("The list from number is " + str(S2))
+S1.reverse()
+S2.reverse()
+print("S1=" + str(S1))
+print("S2=" + str(S2))
 
 #A+B+K sum
 
