@@ -141,3 +141,120 @@ def enveloped_cells():
     print(" ")
 
 enveloped_cells()
+
+# data from first row, input
+G_left_dot_FR = [None] * 7
+G_left_prev_dot_FR = [None] * 7
+P_left_dot_FR = [None] * 7
+P_left_prev_dot_FR = [None] * 7
+
+G_right_dot_FR = [None] * 7
+G_right_prev_dot_FR = [None] * 7
+P_right_dot_FR = [None] * 7
+P_right_prev_dot_FR = [None] * 7
+
+#output
+G_and_prev_left_dot_FR = [None] * 7
+G_and_prev_right_dot_FR = [None] * 7
+P_and_prev_left_dot_FR = [None] * 7
+P_and_prev_right_dot_FR = [None] * 7
+def first_dot_row():
+    for i in range(n - 2, 0, -2): # iterate from 5 to 1 skip by 2 (double black dot)
+        G_left_dot_FR[i]=G_prim_envelope[i]
+        P_left_dot_FR[i]=P_prim_envelope[i]
+        P_left_prev_dot_FR[i]=P_prim_envelope[i - 1]
+        G_left_prev_dot_FR[i]=G_prim_envelope[i - 1]
+
+        G_and_prev_left_dot_FR[i]=(P_left_dot_FR[i] & G_left_prev_dot_FR[i]) | G_left_dot_FR[i]
+        P_and_prev_left_dot_FR[i]=(P_left_dot_FR[i] & P_left_prev_dot_FR[i])
+
+        G_right_dot_FR[i]=G[i]
+        P_right_dot_FR[i]=P[i]
+        P_right_prev_dot_FR[i]=P[i - 1]
+        G_right_prev_dot_FR[i]=G[i - 1]
+
+        G_and_prev_right_dot_FR[i] = (P_right_dot_FR[i] & G_right_prev_dot_FR[i]) | G_right_dot_FR[i]
+        P_and_prev_right_dot_FR[i] = (P_right_dot_FR[i] & P_right_prev_dot_FR[i])
+
+    for i in range(n - 1, -1, -2): # iterate from 6 to 0 skip by 2 (white dot)
+        G_left_dot_FR[i] = G_prim_envelope[i]
+        P_left_dot_FR[i] = P_prim_envelope[i]
+
+        G_and_prev_left_dot_FR[i]=G_left_dot_FR[i]
+        P_and_prev_left_dot_FR[i]=P_left_dot_FR[i]
+
+        G_and_prev_right_dot_FR[i] = G[i]
+        P_and_prev_right_dot_FR[i] = P[i]
+
+first_dot_row()
+
+# data from second row
+G_left_dot_SR = [None] * 7
+G_left_prev_dot_SR = [None] * 7
+P_left_dot_SR = [None] * 7
+P_left_prev_dot_SR = [None] * 7
+
+G_right_dot_SR = [None] * 7
+G_right_prev_dot_SR = [None] * 7
+P_right_dot_SR = [None] * 7
+P_right_prev_dot_SR = [None] * 7
+
+#output from second row
+G_and_prev_left_dot_SR = [None] * 7
+G_and_prev_right_dot_SR = [None] * 7
+P_and_prev_left_dot_SR = [None] * 7
+P_and_prev_right_dot_SR = [None] * 7
+
+# cos nie tak z black dotem na 3. bicie od prawej
+def second_dot_row():
+    i=n-1
+    while(i!=1):  # iterate from 6 to 2 skip by 1 (double black dot)
+        G_left_dot_SR[i] = G_and_prev_left_dot_FR[i]  # taking data from previous row
+        P_left_dot_SR[i] = P_and_prev_left_dot_FR[i]
+
+        if i==3:
+            G_left_prev_dot_SR[i] = G_and_prev_left_dot_FR[i - 2]
+            P_left_prev_dot_SR[i] = P_and_prev_left_dot_FR[i - 2]
+
+        else:
+            G_left_prev_dot_SR[i] = G_and_prev_left_dot_FR[i - 1]
+            P_left_prev_dot_SR[i] = P_and_prev_left_dot_FR[i - 1]
+
+        G_and_prev_left_dot_SR[i] = (P_left_dot_SR[i] & G_left_prev_dot_SR[i]) | G_left_dot_SR[i]
+        P_and_prev_left_dot_SR[i] = (P_left_dot_SR[i] & P_left_prev_dot_SR[i])
+
+        G_right_dot_SR[i] = G_and_prev_right_dot_FR[i]  # taking data from previous row
+        P_right_dot_SR[i] = P_and_prev_right_dot_FR[i]
+
+        if i==3:
+            G_right_prev_dot_SR[i] = G_and_prev_right_dot_FR[i - 2]
+            P_right_prev_dot_SR[i] = P_and_prev_right_dot_FR[i - 2]
+
+        else:
+            G_right_prev_dot_SR[i] = G_and_prev_right_dot_FR[i - 1]
+            P_right_prev_dot_SR[i] = P_and_prev_right_dot_FR[i - 1]
+
+        G_and_prev_right_dot_SR[i] = (P_right_dot_SR[i] & G_right_prev_dot_SR[i]) | G_right_dot_SR[i]
+        P_and_prev_right_dot_SR[i] = (P_right_dot_SR[i] & P_right_prev_dot_SR[i])
+
+        if i==6:
+            i-=2
+        i-=1
+
+    i=n-2
+    while(i!=-1):
+        G_left_dot_FR[i] = G_prim_envelope[i]
+        P_left_dot_FR[i] = P_prim_envelope[i]
+
+        G_and_prev_left_dot_SR[i] = G_and_prev_left_dot_FR[i]
+        P_and_prev_left_dot_SR[i] = P_and_prev_left_dot_FR[i]
+
+        G_and_prev_right_dot_SR[i] = G_and_prev_right_dot_FR[i]
+        P_and_prev_right_dot_SR[i] = P_and_prev_right_dot_FR[i]
+
+        if i==4: # jump over 2
+            i-=2
+        i-=1
+
+second_dot_row()
+print("Cos")
