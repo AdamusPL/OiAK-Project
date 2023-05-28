@@ -67,7 +67,9 @@ P=[None]*7
 H=[None]*7
 A_prim=[None]*7
 
-def hashed_cell():
+def hashed_cells():
+    print("Hashed cells:")
+    print("--------------")
     for i in range(n - 1, -1, -1):
         G[i] = A[i] & B[i]
         P[i] = A[i] | B[i]
@@ -81,13 +83,14 @@ def hashed_cell():
         print("a_prim_", i, "=", A_prim[i])
         print(" ")
 
-hashed_cell()
-
+hashed_cells()
 
 A_prim_buffer= [None] * 7
 B_prim_buffer= [None] * 7
 
-def controlled_buffer():
+def controlled_buffers():
+    print("Controlled buffers:")
+    print("--------------")
     for i in range(n - 1, -1, -1):
         if(K[i]==0):
             A_prim_buffer[i] = H[i]
@@ -96,6 +99,11 @@ def controlled_buffer():
             A_prim_buffer[i] = A_prim[i]
             B_prim_buffer[i] = P[i]
 
+        print("a_", i, "_prim", "=", A_prim_buffer[i])
+        print("b_", i, "_next_prim", "=", B_prim_buffer[i])
+        print(" ")
+
+controlled_buffers()
 
 A_prim_envelope = [None] * 7
 B_prim_envelope = [None] * 7
@@ -104,21 +112,32 @@ G_prim_envelope = [None] * 7
 P_prim_envelope = [None] * 7
 H_prim_envelope = [None] * 7
 
-def envelope_cell():
+def enveloped_cells():
+    print("Enveloped cells:")
+    print("--------------")
     for i in range(n - 1, 0, -1): # iterate from n-1 to 1
         A_prim_envelope[i] = A_prim_buffer[i]
         B_prim_envelope[i] = B_prim_buffer[i-1]
 
         G_prim_envelope[i] = A_prim_envelope[i] & B_prim_envelope[i]
         P_prim_envelope[i] = A_prim_envelope[i] | B_prim_envelope[i]
-        H_prim_envelope[i] = negation(negation(G_prim_envelope[i]) & P_prim_envelope[i])
+        H_prim_envelope[i] = negation(G_prim_envelope[i]) & P_prim_envelope[i]
+
+        print("g_", i, "_prim", "=", G_prim_envelope[i])
+        print("p_", i, "_prim", "=", P_prim_envelope[i])
+        print("h_", i, "_prim", "=", H_prim_envelope[i])
+        print(" ")
 
     A_prim_envelope[0] = A_prim_buffer[0]
     B_prim_envelope[0] = 0
 
     G_prim_envelope[0] = A_prim_envelope[0] & B_prim_envelope[0]
     P_prim_envelope[0] = A_prim_envelope[0] | B_prim_envelope[0]
-    H_prim_envelope[0] = negation(negation(G_prim_envelope[0]) & P_prim_envelope[0])
+    H_prim_envelope[0] = negation(G_prim_envelope[0]) & P_prim_envelope[0]
 
+    print("g_", 0, "_prim", "=", G_prim_envelope[0])
+    print("p_", 0, "_prim", "=", P_prim_envelope[0])
+    print("h_", 0, "_prim", "=", H_prim_envelope[0])
+    print(" ")
 
-
+enveloped_cells()
