@@ -158,7 +158,9 @@ G_and_prev_left_dot_FR = [None] * 7
 G_and_prev_right_dot_FR = [None] * 7
 P_and_prev_left_dot_FR = [None] * 7
 P_and_prev_right_dot_FR = [None] * 7
+
 def first_dot_row():
+
     for i in range(n - 2, 0, -2): # iterate from 5 to 1 skip by 2 (double black dot)
         G_left_dot_FR[i]=G_prim_envelope[i]
         P_left_dot_FR[i]=P_prim_envelope[i]
@@ -208,7 +210,7 @@ P_and_prev_right_dot_SR = [None] * 7
 # cos nie tak z black dotem na 3. bicie od prawej
 def second_dot_row():
     i=n-1
-    while(i!=1):  # iterate from 6 to 2 skip by 1 (double black dot)
+    while(i!=1):  # list[6,3,2]
         G_left_dot_SR[i] = G_and_prev_left_dot_FR[i]  # taking data from previous row
         P_left_dot_SR[i] = P_and_prev_left_dot_FR[i]
 
@@ -242,7 +244,7 @@ def second_dot_row():
         i-=1
 
     i=n-2
-    while(i!=-1):
+    while(i!=-1): #list[5,4,1,0]
         G_left_dot_FR[i] = G_prim_envelope[i]
         P_left_dot_FR[i] = P_prim_envelope[i]
 
@@ -257,4 +259,117 @@ def second_dot_row():
         i-=1
 
 second_dot_row()
+
+# data from second row
+G_left_dot_TR = [None] * 7
+G_left_prev_dot_TR = [None] * 7
+P_left_dot_TR = [None] * 7
+P_left_prev_dot_TR = [None] * 7
+
+G_right_dot_TR = [None] * 7
+G_right_prev_dot_TR = [None] * 7
+P_right_dot_TR = [None] * 7
+P_right_prev_dot_TR = [None] * 7
+
+#output from second row
+G_and_prev_left_dot_TR = [None] * 7
+G_and_prev_right_dot_TR = [None] * 7
+P_and_prev_left_dot_TR = [None] * 7
+P_and_prev_right_dot_TR = [None] * 7
+
+def third_row():
+    offset=3 # bring score from 3 prev higher black dots
+    for i in range(n - 1, 3, -1): # list[6,5,4]
+        G_left_dot_TR[i]=G_and_prev_left_dot_SR[i]
+        P_left_dot_TR[i]=P_and_prev_left_dot_SR[i]
+
+        G_left_prev_dot_TR[i] = G_and_prev_left_dot_SR[i-offset]
+        P_left_prev_dot_TR[i] = P_and_prev_left_dot_SR[i-offset]
+
+        G_and_prev_left_dot_TR[i] = (P_left_dot_TR[i] & G_left_prev_dot_TR[i]) | G_left_dot_TR[i]
+        P_and_prev_left_dot_TR[i] = (P_left_dot_TR[i] & P_left_prev_dot_TR[i])
+
+        G_right_dot_TR[i] = G_and_prev_right_dot_SR[i]
+        P_right_dot_TR[i] = P_and_prev_right_dot_SR[i]
+
+        G_right_prev_dot_TR[i] = G_and_prev_right_dot_SR[i - offset]
+        P_right_prev_dot_TR[i] = P_and_prev_right_dot_SR[i - offset]
+
+        G_and_prev_right_dot_TR[i] = (P_right_dot_TR[i] & G_right_prev_dot_TR[i]) | G_right_dot_TR[i]
+        P_and_prev_right_dot_TR[i] = (P_right_dot_TR[i] & P_right_prev_dot_TR[i])
+
+        offset-=1
+
+    for i in range(n - 4, -1, -1):
+        G_and_prev_left_dot_TR[i] = G_and_prev_left_dot_SR[i]
+        P_and_prev_left_dot_TR[i] = P_and_prev_left_dot_SR[i]
+
+        G_and_prev_right_dot_TR[i] = G_and_prev_right_dot_SR[i]
+        P_and_prev_right_dot_TR[i] = P_and_prev_right_dot_SR[i]
+
+third_row()
 print("Cos")
+
+C_prev_left = [None] * 7
+P_prev_left = [None] * 7
+G_prev_left = [None] * 7
+C_prev_right = [None] * 7
+P_prev_right = [None] * 7
+G_prev_right = [None] * 7
+C_i_left = [None] * 7
+C_i_right= [None] * 7
+def calc_carry():
+    for i in range(0,n-1,1): # from 0 to 5
+        if i==0:
+            C_prev_right[i]=G_and_prev_right_dot_TR[i]
+
+        else:
+            C_prev_right[i]=C_prev_right[i-1]
+        P_prev_right[i]=P_and_prev_right_dot_TR[i+1]
+        G_prev_right[i]=G_and_prev_right_dot_TR[i+1]
+
+        C_i_right[i]=(P_prev_right[i] & C_prev_right[i]) | G_prev_right[i]
+
+        if i==0:
+            C_prev_left[i] = G_and_prev_left_dot_TR[i]
+        else:
+            C_prev_left[i] = C_prev_left[i - 1]
+        P_prev_left[i] = P_and_prev_left_dot_TR[i + 1]
+        G_prev_left[i] = G_and_prev_left_dot_TR[i + 1]
+
+        C_i_left[i] = (P_prev_left[i] & C_prev_left[i]) | G_prev_left[i]
+
+calc_carry()
+
+S = [None] * 7
+
+def tristate_MUXs():
+    if(B_prim_buffer[n-1]==0):
+        C_out=C_i_left[n-2]
+
+    if(B_prim_buffer[n-1]==1):
+        C_out=C_i_right[n-2]
+
+    for i in range(n-1, 1, -1):
+        if(C_out==0):
+            S[i]=H[i]^C_i_right[i-2]
+        if(C_out==1):
+            S[i]=H_prim_envelope[i]^C_i_left[i-2]
+
+    #S1
+    if (C_out == 0):
+        S[1] = H[1] ^ G_and_prev_right_dot_TR[0]
+    if (C_out == 1):
+        S[1] = H_prim_envelope[1] ^ G_and_prev_left_dot_TR[0]
+
+    #S0
+    if C_out==0:
+        S[0]=H[0]
+
+    if C_out==1:
+        S[0]=H_prim_envelope[0]
+
+tristate_MUXs()
+
+S.reverse()
+print("Wynik=", S)
