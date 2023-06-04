@@ -95,8 +95,6 @@ S2.reverse()
 print("S1=" + str(S1))
 print("S2=" + str(S2))
 
-#A+B+K sum
-
 # if carry==1:
 
 
