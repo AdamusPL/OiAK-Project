@@ -2,7 +2,7 @@ from Utility import BinaryArithmeticUtils as Bin
 
 from Parametrized.controlled_buffers import controlled_buffers
 from Parametrized.enveloped_cells import enveloped_cells
-from Parametrized.first_dot_row import first_dot_row
+from Parametrized.dots import first_dot_row
 from Parametrized.hashed_cells import hashed_cells
 from Parametrized.tristate_MUXs import tristate_MUXs
 
@@ -190,7 +190,7 @@ C_i_right = [None] * 7
 
 
 def calc_carry():
-    for i in range(0, n - 1, 1):  # from 0 to 5
+    for i in range(0, n - 1, 1):  # from 0 to n-1
         if i == 0:
             C_prev_right[i] = G_and_prev_right_dot_TR[i]
 
@@ -238,7 +238,6 @@ if __name__ == '__main__':
     fdr.operation(ec.G_prim_envelope,ec.P_prim_envelope,hc.G,hc.P)
 
     #second
-
 
 
     #third
