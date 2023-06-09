@@ -1,5 +1,6 @@
 class enveloped_cells:
     def __init__(self,n):
+        self.n=n
         self.A_prim_envelope = [None] * n
         self.B_prim_envelope = [None] * n
 
@@ -19,7 +20,7 @@ class enveloped_cells:
     def operation(self, A_prim_buffer, B_prim_buffer):
         print("Enveloped cells:")
         print("--------------")
-        for i in range(n - 1, 0, -1):  # iterate from n-1 to 1
+        for i in range(self.n - 1, 0, -1):  # iterate from n-1 to 1
             self.A_prim_envelope[i] = A_prim_buffer[i]
             self.B_prim_envelope[i] = B_prim_buffer[i - 1]
 

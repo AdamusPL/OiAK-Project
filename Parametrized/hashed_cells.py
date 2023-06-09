@@ -19,8 +19,8 @@ class hashed_cells:
         print("Hashed cells:")
         print("--------------")
         for i in range(self.n - 1, -1, -1):
-            self.G[i] = self.A[i] & self.B[i]
-            self.P[i] = self.A[i] | self.B[i]
+            self.G[i] = A[i] & B[i]
+            self.P[i] = A[i] | B[i]
 
             self.H[i] = (self.negation(self.G[i]) & self.P[i])
             self.A_prim[i] = (self.negation((self.negation(self.G[i])) & self.P[i]))

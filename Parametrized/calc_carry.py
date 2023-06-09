@@ -1,5 +1,6 @@
 class calc_carry:
     def __init__(self, n):
+        self.n=n
         self.C_prev_left = [None] * n
         self.P_prev_left = [None] * n
         self.G_prev_left = [None] * n
@@ -10,6 +11,7 @@ class calc_carry:
         self.C_i_right = [None] * n
 
     def operation(self, G_and_prev_right_dot_LR, P_and_prev_right_dot_LR, G_and_prev_left_dot_LR,  P_and_prev_left_dot_LR):
+        n=self.n
         for i in range(0, n - 1, 1):  # from 0 to n-1
             if i == 0:
                 self.C_prev_right[i] = G_and_prev_right_dot_LR[i]

@@ -1,5 +1,6 @@
 class controlled_buffers:
     def __init__(self,n):
+        self.n=n
         self.A_prim_buffer = [None] * n
         self.B_prim_buffer = [None] * n
 

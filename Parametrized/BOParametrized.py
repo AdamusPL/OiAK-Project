@@ -37,7 +37,7 @@ def check(X, n):
     return good
 
 
-def read(A, B, K, n):
+def read():
     while True:
         A = input("Enter A=")
         B = input("Enter B=")
@@ -57,7 +57,7 @@ def read(A, B, K, n):
         checkK = check(K, n)
 
         if checkA is True and checkB is True and checkK is True:
-            break
+            return A,B,K,n
 
 
 def negation(a):
@@ -69,44 +69,10 @@ def negation(a):
     # never used
     return 33
 
-C_prev_left = [None] * 7
-P_prev_left = [None] * 7
-G_prev_left = [None] * 7
-C_prev_right = [None] * 7
-P_prev_right = [None] * 7
-G_prev_right = [None] * 7
-C_i_left = [None] * 7
-C_i_right = [None] * 7
-
-def calc_carry(G_and_prev_right_dot_LR, P_and_prev_right_dot_LR, G_and_prev_left_dot_LR,  P_and_prev_left_dot_LR):
-    for i in range(0, n - 1, 1):  # from 0 to n-1
-        if i == 0:
-            C_prev_right[i] = G_and_prev_right_dot_LR[i]
-
-        else:
-            C_prev_right[i] = C_prev_right[i - 1]
-        P_prev_right[i] = P_and_prev_right_dot_LR[i + 1]
-        G_prev_right[i] = G_and_prev_right_dot_LR[i + 1]
-
-        C_i_right[i] = (P_prev_right[i] & C_prev_right[i]) | G_prev_right[i]
-
-        if i == 0:
-            C_prev_left[i] = G_and_prev_left_dot_LR[i]
-        else:
-            C_prev_left[i] = C_prev_left[i - 1]
-        P_prev_left[i] = P_and_prev_left_dot_LR[i + 1]
-        G_prev_left[i] = G_and_prev_left_dot_LR[i + 1]
-
-        C_i_left[i] = (P_prev_left[i] & C_prev_left[i]) | G_prev_left[i]
-
-
-calc_carry()
-
 if __name__ == '__main__':
-    A, B, K, n = 0, 0, 0, 0
 
-    #reading
-    read(A, B, K, n)
+    #tuple!
+    A, B, K, n = read()
 
     #hashed_cells
     hc = hashed_cells(n)
@@ -121,10 +87,10 @@ if __name__ == '__main__':
     ec.operation(cb.A_prim_buffer, cb.B_prim_buffer)
 
     #dots
-    d=dots()
-    d.operation(ec.G_prim_envelope, ec.P_prim_envelope, hc.G, hc.P, )
+    d=dots(n)
+    d.operation(ec.G_prim_envelope, ec.P_prim_envelope, hc.G, hc.P)
 
     #tristate MUXs
     tMUX = tristate_MUXs(n)
-    tMUX.operation(cb.B_prim_buffer,)
+    tMUX.operation(cb.B_prim_buffer)
 
