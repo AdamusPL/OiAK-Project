@@ -1,8 +1,10 @@
-from Parametrized.black_dot import black_dot
+from Parametrized.double_black_dot import double_black_dot
+from Parametrized.white_dot import white_dot
+
 
 class dots:
     def __init__(self, n):
-        self.double_black_dot_list=[]
+        self.rowList=[]
 
     def negation(self, a):
         if a == 0:
@@ -21,47 +23,61 @@ class dots:
         i=0
 
         while(found is False):
-            if(2^i <= n < 2^i+1):
+            if(2**i <= n < 2**(i+1)):
                found=True
                numberOfRows = i
             i+=1
 
+        # phase of creating dots
+        dot = False # False - white dot, True - black dot
 
-        if n % 2 == 0:
-            offsetBlack1 = n - 1
-            offsetBlack2 = 0
-            offsetWhite1 = n - 2
-            offsetWhite2 = -1
-
-        else:
-            offsetBlack1 = n - 2
-            offsetBlack2 = -1
-            offsetWhite1 = n - 1
-            offsetWhite2 = 0
-
-        for i in range(numberOfRows, 0, -1):
-            for i in range():
-
-
-        for i in range(offsetBlack1, offsetBlack2, -2):  # iterate, skip by 2 (double black dot)
-
+        for i in range(1, numberOfRows+1, 1):
             list=[]
-            bdL = black_dot()
-            bdL.operation(G_prim_envelope[i], P_prim_envelope[i], P_prim_envelope[i - 1], G_prim_envelope[i - 1])
-            list.append(bdL)
+            for j in range(1, n+1, 1):
+                if dot is False:
+                    wd = white_dot()
+                    list[j-1]=wd
+                else:
+                    bd = double_black_dot()
+                    list[j-1]=bd
 
-            bdP = black_dot()
-            bdP.operation(G[i], P[i], P[i - 1], G[i - 1])
-            list.append(bdP)
+                if j % 2 ** (i-1)==0:
+                    dot=True
 
-            self.double_black_dot_list.append(list)
+            self.rowList.append(list)
 
-        for i in range(offsetWhite1, offsetWhite2, -2):  # iterate, skip by 2 (white dot)
-            self.G_left_dot[i] = G_prim_envelope[i]
-            self.P_left_dot[i] = P_prim_envelope[i]
+        curRow=1
+        j=0
 
-            self.G_and_prev_left_dot_output[i] = self.G_left_dot[i]
-            self.P_and_prev_left_dot_output[i] = self.P_left_dot[i]
+        for sublist in self.rowList:
 
-            self.G_and_prev_right_dot_output[i] = G[i]
-            self.P_and_prev_right_dot_output[i] = P[i]
+            offset=1
+            prevList=sublist[offset-2]
+
+            for obj in sublist:
+                if(isinstance(obj,double_black_dot)):
+                    if curRow==1:
+
+                        offset=1
+
+                        obj.operation(G_prim_envelope[j-1], G_prim_envelope[j], P_prim_envelope[j-1], P_prim_envelope[j],
+                                      G[j-1], G[j], P[j-1], P[j])
+
+                    else: # tu jakos wziac z poprzedniego etapu te dane
+                        obj.operation(G_i_i_prev_left[j - offset], G_i_i_prev_left[j], P_i_i_prev_left[j - offset], P_i_i_prev_left[j],
+                                      G_i_i_prev_right[j - offset], G_i_i_prev_right[j], P_i_i_prev_right[j - offset], P_i_i_prev_right[j])
+
+                        offset+=1
+
+
+                elif(isinstance(obj,white_dot)):
+                    if curRow == 1:
+                        obj.operation()
+
+                    else:
+
+
+            curRow+=1
+
+
+

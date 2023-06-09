@@ -1,8 +1,8 @@
 from Utility import BinaryArithmeticUtils as Bin
 
 from Parametrized.controlled_buffers import controlled_buffers
+from Parametrized.dots import dots
 from Parametrized.enveloped_cells import enveloped_cells
-from Parametrized.dots import first_dot_row
 from Parametrized.hashed_cells import hashed_cells
 from Parametrized.tristate_MUXs import tristate_MUXs
 
@@ -69,116 +69,6 @@ def negation(a):
     # never used
     return 33
 
-
-# we should only edit rows
-
-def second_dot_row(n):
-    # data from second row
-
-    i = n - 1
-    while (i != 1):  # list[6,3,2]
-        G_left_dot_SR[i] = G_and_prev_left_dot_FR[i]  # taking data from previous row
-        P_left_dot_SR[i] = P_and_prev_left_dot_FR[i]
-
-        if i == 3:
-            G_left_prev_dot_SR[i] = G_and_prev_left_dot_FR[i - 2]
-            P_left_prev_dot_SR[i] = P_and_prev_left_dot_FR[i - 2]
-
-        else:
-            G_left_prev_dot_SR[i] = G_and_prev_left_dot_FR[i - 1]
-            P_left_prev_dot_SR[i] = P_and_prev_left_dot_FR[i - 1]
-
-        G_and_prev_left_dot_SR[i] = (P_left_dot_SR[i] & G_left_prev_dot_SR[i]) | G_left_dot_SR[i]
-        P_and_prev_left_dot_SR[i] = (P_left_dot_SR[i] & P_left_prev_dot_SR[i])
-
-        G_right_dot_SR[i] = G_and_prev_right_dot_FR[i]  # taking data from previous row
-        P_right_dot_SR[i] = P_and_prev_right_dot_FR[i]
-
-        if i == 3:
-            G_right_prev_dot_SR[i] = G_and_prev_right_dot_FR[i - 2]
-            P_right_prev_dot_SR[i] = P_and_prev_right_dot_FR[i - 2]
-
-        else:
-            G_right_prev_dot_SR[i] = G_and_prev_right_dot_FR[i - 1]
-            P_right_prev_dot_SR[i] = P_and_prev_right_dot_FR[i - 1]
-
-        G_and_prev_right_dot_SR[i] = (P_right_dot_SR[i] & G_right_prev_dot_SR[i]) | G_right_dot_SR[i]
-        P_and_prev_right_dot_SR[i] = (P_right_dot_SR[i] & P_right_prev_dot_SR[i])
-
-        if i == 6:
-            i -= 2
-        i -= 1
-
-    i = n - 2
-    while (i != -1):  # list[5,4,1,0]
-        G_left_dot_FR[i] = G_prim_envelope[i]
-        P_left_dot_FR[i] = P_prim_envelope[i]
-
-        G_and_prev_left_dot_SR[i] = G_and_prev_left_dot_FR[i]
-        P_and_prev_left_dot_SR[i] = P_and_prev_left_dot_FR[i]
-
-        G_and_prev_right_dot_SR[i] = G_and_prev_right_dot_FR[i]
-        P_and_prev_right_dot_SR[i] = P_and_prev_right_dot_FR[i]
-
-        if i == 4:  # jump over 2
-            i -= 2
-        i -= 1
-
-
-second_dot_row()
-
-# data from second row
-G_left_dot_TR = [None] * 7
-G_left_prev_dot_TR = [None] * 7
-P_left_dot_TR = [None] * 7
-P_left_prev_dot_TR = [None] * 7
-
-G_right_dot_TR = [None] * 7
-G_right_prev_dot_TR = [None] * 7
-P_right_dot_TR = [None] * 7
-P_right_prev_dot_TR = [None] * 7
-
-# output from second row
-G_and_prev_left_dot_TR = [None] * 7
-G_and_prev_right_dot_TR = [None] * 7
-P_and_prev_left_dot_TR = [None] * 7
-P_and_prev_right_dot_TR = [None] * 7
-
-
-def third_row():
-    offset = 3  # bring score from 3 prev higher black dots
-    for i in range(n - 1, 3, -1):  # list[6,5,4]
-        G_left_dot_TR[i] = G_and_prev_left_dot_SR[i]
-        P_left_dot_TR[i] = P_and_prev_left_dot_SR[i]
-
-        G_left_prev_dot_TR[i] = G_and_prev_left_dot_SR[i - offset]
-        P_left_prev_dot_TR[i] = P_and_prev_left_dot_SR[i - offset]
-
-        G_and_prev_left_dot_TR[i] = (P_left_dot_TR[i] & G_left_prev_dot_TR[i]) | G_left_dot_TR[i]
-        P_and_prev_left_dot_TR[i] = (P_left_dot_TR[i] & P_left_prev_dot_TR[i])
-
-        G_right_dot_TR[i] = G_and_prev_right_dot_SR[i]
-        P_right_dot_TR[i] = P_and_prev_right_dot_SR[i]
-
-        G_right_prev_dot_TR[i] = G_and_prev_right_dot_SR[i - offset]
-        P_right_prev_dot_TR[i] = P_and_prev_right_dot_SR[i - offset]
-
-        G_and_prev_right_dot_TR[i] = (P_right_dot_TR[i] & G_right_prev_dot_TR[i]) | G_right_dot_TR[i]
-        P_and_prev_right_dot_TR[i] = (P_right_dot_TR[i] & P_right_prev_dot_TR[i])
-
-        offset -= 1
-
-    for i in range(n - 4, -1, -1):
-        G_and_prev_left_dot_TR[i] = G_and_prev_left_dot_SR[i]
-        P_and_prev_left_dot_TR[i] = P_and_prev_left_dot_SR[i]
-
-        G_and_prev_right_dot_TR[i] = G_and_prev_right_dot_SR[i]
-        P_and_prev_right_dot_TR[i] = P_and_prev_right_dot_SR[i]
-
-
-third_row()
-print("Cos")
-
 C_prev_left = [None] * 7
 P_prev_left = [None] * 7
 G_prev_left = [None] * 7
@@ -188,25 +78,24 @@ G_prev_right = [None] * 7
 C_i_left = [None] * 7
 C_i_right = [None] * 7
 
-
-def calc_carry():
+def calc_carry(G_and_prev_right_dot_LR, P_and_prev_right_dot_LR, G_and_prev_left_dot_LR,  P_and_prev_left_dot_LR):
     for i in range(0, n - 1, 1):  # from 0 to n-1
         if i == 0:
-            C_prev_right[i] = G_and_prev_right_dot_TR[i]
+            C_prev_right[i] = G_and_prev_right_dot_LR[i]
 
         else:
             C_prev_right[i] = C_prev_right[i - 1]
-        P_prev_right[i] = P_and_prev_right_dot_TR[i + 1]
-        G_prev_right[i] = G_and_prev_right_dot_TR[i + 1]
+        P_prev_right[i] = P_and_prev_right_dot_LR[i + 1]
+        G_prev_right[i] = G_and_prev_right_dot_LR[i + 1]
 
         C_i_right[i] = (P_prev_right[i] & C_prev_right[i]) | G_prev_right[i]
 
         if i == 0:
-            C_prev_left[i] = G_and_prev_left_dot_TR[i]
+            C_prev_left[i] = G_and_prev_left_dot_LR[i]
         else:
             C_prev_left[i] = C_prev_left[i - 1]
-        P_prev_left[i] = P_and_prev_left_dot_TR[i + 1]
-        G_prev_left[i] = G_and_prev_left_dot_TR[i + 1]
+        P_prev_left[i] = P_and_prev_left_dot_LR[i + 1]
+        G_prev_left[i] = G_and_prev_left_dot_LR[i + 1]
 
         C_i_left[i] = (P_prev_left[i] & C_prev_left[i]) | G_prev_left[i]
 
@@ -231,16 +120,9 @@ if __name__ == '__main__':
     ec = enveloped_cells(n)
     ec.operation(cb.A_prim_buffer, cb.B_prim_buffer)
 
-    #rows
-    #first
-
-    fdr = first_dot_row(n)
-    fdr.operation(ec.G_prim_envelope,ec.P_prim_envelope,hc.G,hc.P)
-
-    #second
-
-
-    #third
+    #dots
+    d=dots()
+    d.operation(ec.G_prim_envelope, ec.P_prim_envelope, hc.G, hc.P, )
 
     #tristate MUXs
     tMUX = tristate_MUXs(n)
