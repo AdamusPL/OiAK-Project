@@ -1,5 +1,6 @@
 from Utility import BinaryArithmeticUtils as Bin
 
+from Parametrized.calc_carry import calc_carry
 from Parametrized.controlled_buffers import controlled_buffers
 from Parametrized.dots import dots
 from Parametrized.enveloped_cells import enveloped_cells
@@ -89,6 +90,11 @@ if __name__ == '__main__':
     #dots
     d=dots(n)
     d.operation(ec.G_prim_envelope, ec.P_prim_envelope, hc.G, hc.P)
+
+    #calculate carry
+    cc=calc_carry(n)
+    cc.operation()
+
 
     #tristate MUXs
     tMUX = tristate_MUXs(n)
