@@ -1,7 +1,7 @@
 class tristate_MUXs:
     def __init__(self,n):
         self.n=n
-        self.S = [None] * 7
+        self.S = [None] * n
 
     def negation(self,a):
         if a == 0:
