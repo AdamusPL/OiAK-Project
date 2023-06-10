@@ -10,24 +10,27 @@ class calc_carry:
         self.C_i_left = [None] * n
         self.C_i_right = [None] * n
 
-    def operation(self, G_and_prev_right_dot_LR, P_and_prev_right_dot_LR, G_and_prev_left_dot_LR,  P_and_prev_left_dot_LR):
+    def operation(self, lastRow):
         n=self.n
         for i in range(0, n - 1, 1):  # from 0 to n-1
             if i == 0:
-                self.C_prev_right[i] = G_and_prev_right_dot_LR[i]
+                self.C_prev_right[i] = lastRow[i].g_i_i_prev_right
 
             else:
                 self.C_prev_right[i] = self.C_prev_right[i - 1]
-            self.P_prev_right[i] = P_and_prev_right_dot_LR[i + 1]
-            self.G_prev_right[i] = G_and_prev_right_dot_LR[i + 1]
+
+            self.P_prev_right[i] = lastRow[i + 1].p_i_i_prev_right
+            self.G_prev_right[i] = lastRow[i + 1].g_i_i_prev_right
 
             self.C_i_right[i] = (self.P_prev_right[i] & self.C_prev_right[i]) | self.G_prev_right[i]
 
             if i == 0:
-                self.C_prev_left[i] = G_and_prev_left_dot_LR[i]
+                self.C_prev_left[i] = lastRow[i].g_i_i_prev_left
+
             else:
                 self.C_prev_left[i] = self.C_prev_left[i - 1]
-            self.P_prev_left[i] = P_and_prev_left_dot_LR[i + 1]
-            self.G_prev_left[i] = G_and_prev_left_dot_LR[i + 1]
+
+            self.P_prev_left[i] = lastRow[i + 1].p_i_i_prev_left
+            self.G_prev_left[i] = lastRow[i + 1].g_i_i_prev_left
 
             self.C_i_left[i] = (self.P_prev_left[i] & self.C_prev_left[i]) | self.G_prev_left[i]

@@ -1,5 +1,6 @@
 class tristate_MUXs:
     def __init__(self,n):
+        self.n=n
         self.S = [None] * 7
 
     def negation(self,a):
@@ -11,7 +12,7 @@ class tristate_MUXs:
         # never used
         return 33
 
-    def operation(self,B_prim_buffer,C_i_left,C_i_right,H,H_prim_envelope,G_and_prev_right_dot,G_and_prev_left_dot):
+    def operation(self,B_prim_buffer,C_i_left,C_i_right,H,H_prim_envelope,lastRow):
         n=self.n
         if (B_prim_buffer[n - 1] == 0):
             C_out = C_i_left[n - 2]
@@ -27,9 +28,9 @@ class tristate_MUXs:
 
         # S1
         if (C_out == 0):
-            self.S[1] = H[1] ^ G_and_prev_right_dot[0]
+            self.S[1] = H[1] ^ lastRow[0].g_i_i_prev_right
         if (C_out == 1):
-            self.S[1] = H_prim_envelope[1] ^ G_and_prev_left_dot[0]
+            self.S[1] = H_prim_envelope[1] ^ lastRow[0].g_i_i_prev_left
 
         # S0
         if C_out == 0:

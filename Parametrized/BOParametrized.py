@@ -89,14 +89,16 @@ if __name__ == '__main__':
 
     #dots
     d=dots(n)
-    d.operation(ec.G_prim_envelope, ec.P_prim_envelope, hc.G, hc.P)
+    lastRow = d.operation(ec.G_prim_envelope, ec.P_prim_envelope, hc.G, hc.P)
 
     #calculate carry
     cc=calc_carry(n)
-    cc.operation()
-
+    cc.operation(lastRow)
 
     #tristate MUXs
     tMUX = tristate_MUXs(n)
-    tMUX.operation(cb.B_prim_buffer)
+    tMUX.operation(cb.B_prim_buffer,cc.C_i_left,cc.C_i_right,hc.H,ec.H_prim_envelope,lastRow)
+
+    #print score
+    tMUX.score()
 

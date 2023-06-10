@@ -54,9 +54,6 @@ class dots:
         # phase of calculating inside dots
 
         for sublist in self.rowList:
-            print(sublist)
-
-        for sublist in self.rowList:
 
             j = 0
             offset = 1
@@ -98,3 +95,5 @@ class dots:
                     j+=1
 
             curRow += 1
+
+        return self.rowList[numberOfRows-1]
