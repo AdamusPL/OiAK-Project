@@ -1,4 +1,4 @@
-from Utility import BinaryArithmeticUtils as Bin
+
 
 def check_AB(X):
     good = True  # when MSB equals 0, we accept everything
